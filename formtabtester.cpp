@@ -83,10 +83,10 @@ void FormTabTester::deleteTab()
 void FormTabTester::tabSelected(const QString &currentText)
 {
     auto key = currentText.toStdString();
-    auto isValid = (0 != tabInfo.count(key));
     QWidget *widget = nullptr;
     auto tabWidget = getTabWidget();
 
+    auto isValid = (0 != tabInfo.count(key));
     if (isValid) {
         widget = tabInfo[key];
         auto tabState = tabWidget->tabState(widget);
@@ -108,7 +108,7 @@ void FormTabTester::tabSelected(const QString &currentText)
     ui->btnDelete->setEnabled(isValid);
 
     if (isValid) {
-        // ui->isVisible already set.
+        // ui->isVisible already set in the case statement above.
         ui->isEnabled->setChecked(widget->isEnabled());
     } else {
         ui->isVisible->setCheckState(Qt::CheckState::Unchecked);
@@ -225,6 +225,9 @@ void FormTabTester::barrageTimeout()
     QWidget *widget = nullptr;
     auto index = 0;
     if (action != Actions::CreateTab) {
+        // Validate that we have a tab and set widget and index.
+        // If we fail for some reasons, change the action to make
+        // a new tab.
         index = qrand() % totalItems;
         auto item = ui->listWidget->item(index);
         auto key = item->text().toStdString();
